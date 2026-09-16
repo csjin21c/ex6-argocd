@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: csjin21c/nginx:1.31.3-alpine
+          image: csjin21c/nginx:dc2d69a0456c77d75069bf66cf568b860eba58a0
           ports:
             - containerPort: 80
           resources:
