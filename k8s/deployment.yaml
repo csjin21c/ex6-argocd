@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
+  namespace: default
 spec:
   replicas: 2
   selector:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: csjin21c/nginx:1.31.3-alpine
+          image: csjin21c/nginx:dc2d69a0456c77d75069bf66cf568b860eba58a0
           ports:
             - containerPort: 80
 ---
@@ -22,6 +23,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-svc
+  namespace: default
 spec:
   type: LoadBalancer
   selector:
