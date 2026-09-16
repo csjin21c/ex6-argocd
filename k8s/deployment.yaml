@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: csjin21c/nginx:dc2d69a0456c77d75069bf66cf568b860eba58a0
+          image: csjin21c/nginx:9f01d06d5f26bf9763c41d48463afe5bff9ccf31
           ports:
             - containerPort: 80
 ---
