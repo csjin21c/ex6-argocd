@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  # replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: nginx-web
+  # 아래 부터 파드에 대한 설정
+  template:
+    metadata:
+      labels:
+        app: nginx-web
+    spec:
+      containers:
+        - name: nginx-container
+          image: csjin21c/nginx:1.31.3-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          env:
+          - name: NGINX_PORT
+            value: "80"
+          livenessProbe:
+            httpGet:
+              path: /       # nginx의 특성상 헬스체크 경로는 루트로 재 정의
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /       # nginx의 특성상 헬스체크 경로는 루트로 재 정의
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+# HPA(Horizontal Pod Autoscaler)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx-deployment  # <워커로드 이름> 여기선 Deployment_name
+  minReplicas: 2  # <파드의 최소 유지 갯수>
+  maxReplicas: 6  # <파드의 최대 갯수>
+  metrics:
+    - type: Resource  # resource(파드의 cpu or memory), Pods(초당 요청수, 응답 지연 시간), 
+                      # Object(Ingress-ALB 로 유입되는 트래픽의 양), External(AWS SQS 서비스 큐 메시지 갯수)
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80 # %
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: LoadBalancer    # 외부 접속을 위한 로드밸런서 정의(CLB)
+  selector:
+    app: nginx-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+
+
+
+
+
+
+
+
+
+
+
