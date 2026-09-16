@@ -40,7 +40,7 @@ metadata:
   name: alb-base-ingress
   annotations:  # 보안 그룹 등 AWS에 대한 설정들
     # 보안 그룹 설정: alb.ingress.kubernetes.io/security-groups: id, id, ...
-    # alb.ingress.kubernetes.io/security-groups: sg-08344a6a23c701510
+    alb.ingress.kubernetes.io/security-groups: sg-0b8b57110c423401a
     # internet-facing: 외부로드밸런서(IP 부여), internet(내부)
     alb.ingress.kubernetes.io/scheme: internet-facing
     # ip(Pod의 IP로 트래픽 전달)
@@ -73,7 +73,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /nginx
+          - path: /
             pathType: Prefix
             backend:
               service:
