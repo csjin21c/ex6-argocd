@@ -7,11 +7,11 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nginx-web-label
+      app: nginx-web-lb
   template:
     metadata:
       labels:
-        app: nginx-web-label
+        app: nginx-web-lb
     spec:
       containers:
         - name: nginx-container
@@ -24,10 +24,11 @@ kind: Service
 metadata:
   name: nginx-svc
   namespace: default
+
 spec:
   type: LoadBalancer
   selector:
-    app: nginx-web-label
+    app: nginx-web-lb
   ports:
     - protocol: TCP
       port: 80
